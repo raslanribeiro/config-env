@@ -73,6 +73,15 @@ If producion.json file does not exist or do not contain some key:value, it will 
 
 ## Using config_env
 
+The name of the enrironment variable PYTHON_ENV must be the same as your json file created.
+If PYTHON_ENV is not defined, the values defined in default.json will be used.
+
+Example:
+
+```bash
+export PYTHON_ENV=production
+```
+
 ```python
 # app.py
 from config_env import config_env
