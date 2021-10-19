@@ -73,7 +73,7 @@ If producion.json file does not exist or do not contain some key:value, it will 
 
 ## Using config_env
 
-The name of the enrironment variable PYTHON_ENV must be the same as your json file created.
+The name of the environment variable PYTHON_ENV must be the same as your json file created.
 If PYTHON_ENV is not defined, the values defined in default.json will be used.
 
 Example:
@@ -84,11 +84,11 @@ export PYTHON_ENV=production
 
 ```python
 # app.py
-from config_env import config_env
+from config_env import ConfigEnv
 
-config = config_env.config()
+config = ConfigEnv()
 
-customer_host = config.get("Customer").get("dbConfig").get("host")
+customer_host = config.get("Customer.dbConfig.host")
 
-customer_credit = config.get("Customer").get("credit")
+customer_credit = config.get("Customer.credit")
 ```
