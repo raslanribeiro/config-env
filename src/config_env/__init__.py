@@ -51,11 +51,15 @@ class ConfigEnv:
                 exec("self.config.update(default_config)")
             else:
                 raise ValueError(f"Missing config file default.json")
-        else:
+
+        if self.python_env not in [None, "DEFAULT"]:
             if f"{self.python_env.lower().replace('-','_')}.json" in files:
-                exec(f"self.config.update({self.python_env.lower()}_config)")
+                env_name = f"{self.python_env.lower()}_config"
+                # exec(f"self.config.update({env_name})")
+                self.config = self.__update_dictionary(self.config, eval(env_name))
             else:
                 raise ValueError(f"Missing config file {self.python_env.lower()}.json")
+
         if "custom_environment_variables.json" in files:
             custom_config = self.__evaluate_environment_variables(
                 eval("custom_environment_variables_config")
@@ -66,10 +70,13 @@ class ConfigEnv:
     
     def get(self, values):
         values_list = values.split(".")
-        command = "self.config"
-        for value in values_list:
-            command+=f".get('{value}')"
-        try:
-            return eval(command)
-        except:
-            return None
+        if len(values_list) == 1 and not values_list[0]: 
+            return self.config
+        else:
+            command = "self.config"
+            for value in values_list:
+                command+=f".get('{value}')"
+            try:
+                return eval(command)
+            except:
+                return None
