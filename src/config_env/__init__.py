@@ -1,6 +1,7 @@
 import os
 import collections.abc
-
+from dotenv import load_dotenv
+load_dotenv()
 
 class ConfigEnv:
     def __init__(self) -> None:
