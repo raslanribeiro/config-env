@@ -37,26 +37,25 @@ class ConfigEnv:
 
     def __run(self):
         self.config = {}
-        dir = "./config/"
+        dir = f"{os.getcwd()}/config"
         files = os.listdir(dir)
         filenames = []
         for file in files:
-            path = dir + file
+            path = dir + "/" +file
             if os.stat(path).st_size != 0:
                 filename = file.split(".")[0].replace("-", "_") + "_config"
                 filenames.append(filename)
-                exec(f"{filename} = {eval(open(path).read())}")
+                exec(f'{filename} = {eval(open(path).read())}')
 
         if self.python_env == None or "DEFAULT":
             if "default.json" in files:
-                exec("self.config.update(default_config)")
+                exec('self.config.update(default_config)')
             else:
                 raise ValueError(f"Missing config file default.json")
 
         if self.python_env not in [None, "DEFAULT"]:
             if f"{self.python_env.lower().replace('-','_')}.json" in files:
                 env_name = f"{self.python_env.lower()}_config"
-                # exec(f"self.config.update({env_name})")
                 self.config = self.__update_dictionary(self.config, eval(env_name))
             else:
                 raise ValueError(f"Missing config file {self.python_env.lower()}.json")
