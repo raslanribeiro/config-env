@@ -1,6 +1,8 @@
 import os
+import sys
 import collections.abc
-
+sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+"/configenv")
 
 class ConfigEnv:
     def __init__(self) -> None:
