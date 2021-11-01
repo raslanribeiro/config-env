@@ -1,8 +1,6 @@
 import os
-import sys
 import collections.abc
-sys.path.append(os.getcwd())
-sys.path.append(os.getcwd()+"/configenv")
+
 
 class ConfigEnv:
     def __init__(self) -> None:
@@ -38,7 +36,7 @@ class ConfigEnv:
 
     def __run(self):
         self.config = {}
-        dir = os.getcwd() + "/configenv"
+        dir = os.path.relpath("configenv")
         files = os.listdir(dir)
         filenames = []
         for file in files:
