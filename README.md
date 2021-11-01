@@ -6,8 +6,8 @@ Package to manage environment variables similar to npm config from nodejs
 
 ```bash
 pip install config_env
-mkdir config
-vi config/default.json
+mkdir configenv
+vi configenv/default.json
 ```
 
 ```json
@@ -30,7 +30,7 @@ vi config/default.json
 ```
 
 ```bash
-vi config/production.json
+vi configenv/production.json
 ```
 
 ```json
@@ -49,7 +49,7 @@ vi config/production.json
 And if is necessary to hide secret values, it is recommended to use custom_environment_varibles.json to get environment variables:
 
 ```bash
-vi config/custom_environment_varibles.json
+vi configenv/custom_environment_varibles.json
 ```
 
 ```json
