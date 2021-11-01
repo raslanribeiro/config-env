@@ -1,7 +1,6 @@
 import os
 import collections.abc
-from dotenv import load_dotenv
-load_dotenv()
+
 
 class ConfigEnv:
     def __init__(self) -> None:
@@ -37,7 +36,7 @@ class ConfigEnv:
 
     def __run(self):
         self.config = {}
-        dir = f"{os.getcwd()}/config"
+        dir = os.getcwd() + "/configenv"
         files = os.listdir(dir)
         filenames = []
         for file in files:
@@ -45,20 +44,20 @@ class ConfigEnv:
             if os.stat(path).st_size != 0:
                 filename = file.split(".")[0].replace("-", "_") + "_config"
                 filenames.append(filename)
-                exec(f'{filename} = {eval(open(path).read())}')
+                exec(filename + "= eval(open(path).read())")
 
         if self.python_env == None or "DEFAULT":
             if "default.json" in files:
-                exec('self.config.update(default_config)')
+                exec("self.config.update(default_config)")
             else:
-                raise ValueError(f"Missing config file default.json")
+                raise ValueError("Missing config file default.json")
 
         if self.python_env not in [None, "DEFAULT"]:
-            if f"{self.python_env.lower().replace('-','_')}.json" in files:
-                env_name = f"{self.python_env.lower()}_config"
+            if (self.python_env.lower().replace('-','_')+".json") in files:
+                env_name = self.python_env.lower() + "_config"
                 self.config = self.__update_dictionary(self.config, eval(env_name))
             else:
-                raise ValueError(f"Missing config file {self.python_env.lower()}.json")
+                raise ValueError("Missing config file"+ self.python_env.lower()+ ".json")
 
         if "custom_environment_variables.json" in files:
             custom_config = self.__evaluate_environment_variables(
@@ -75,7 +74,7 @@ class ConfigEnv:
         else:
             command = "self.config"
             for value in values_list:
-                command+=f".get('{value}')"
+                command+=".get('"+value+"')"
             try:
                 return eval(command)
             except:
