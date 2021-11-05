@@ -1,3 +1,3 @@
-from config_env import config_env
+from config_env import ConfigEnv
 
-config = config_env.config()
+config = ConfigEnvg()

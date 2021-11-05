@@ -1,4 +1,5 @@
 import os
+import glob
 import collections.abc
 
 
@@ -34,23 +35,37 @@ class ConfigEnv:
                 config.update({key: os.getenv(value)})
         return config
 
+    def __get_path_files(self):
+        result = []
+        for root, dirs, files in os.walk(os.getcwd(), topdown=False):
+            for dir in dirs:
+                if dir == "configenv":
+                    os.chdir(dir)
+                    for file in glob.glob("*.json"):
+                        result.append(os.path.join(root, dir, file))
+                    if len(result) > 0:
+                        break
+            if len(result) > 0:
+                break
+        return result     
+
     def __run(self):
+        files_path = self.__get_path_files()
+        files = [i.split('/')[-1] for i in files_path]
         self.config = {}
-        dir = os.path.relpath("configenv")
-        files = os.listdir(dir)
         filenames = []
-        for file in files:
-            path = dir + "/" +file
-            if os.stat(path).st_size != 0:
+        for file, file_path in zip(files, files_path) :
+            if os.stat(file_path).st_size != 0:
                 filename = file.split(".")[0].replace("-", "_") + "_config"
                 filenames.append(filename)
-                exec(filename + "= eval(open(path).read())")
+                exec(filename + "= eval(open(file_path).read())")
 
         if self.python_env == None or "DEFAULT":
             if "default.json" in files:
                 exec("self.config.update(default_config)")
             else:
-                raise ValueError("Missing config file default.json")
+                raise FileNotFoundError("Missing config file default.json")
+                raise FileNotFoundError
 
         if self.python_env not in [None, "DEFAULT"]:
             if (self.python_env.lower().replace('-','_')+".json") in files:
