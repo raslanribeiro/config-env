@@ -82,7 +82,6 @@ class ConfigEnv:
                 exec("self.config.update(default_config)")
             else:
                 raise FileNotFoundError("Missing config file default.json")
-                raise FileNotFoundError
 
         if self.python_env not in [None, "DEFAULT"]:
             if (self.python_env.lower().replace('-','_')+".json") in files:
