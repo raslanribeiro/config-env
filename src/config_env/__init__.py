@@ -1,6 +1,7 @@
 import os
 import glob
 import collections.abc
+import sys
 
 
 class ConfigEnv:
@@ -34,19 +35,35 @@ class ConfigEnv:
             else:
                 config.update({key: os.getenv(value)})
         return config
-
+           
     def __get_path_files(self):
         result = []
-        for root, dirs, files in os.walk(os.getcwd(), topdown=False):
-            for dir in dirs:
-                if dir == "configenv":
-                    os.chdir(os.path.join(root, dir))
-                    for file in glob.glob("*.json"):
-                        result.append(os.path.join(root, dir, file))
+        # It could be a problem once it can get configenv path from differents projects.
+        # for root, dirs, files in os.walk(os.getcwd(), topdown=False):
+        #     for dir in dirs:
+        #         if dir == "configenv":
+        #             os.chdir(os.path.join(root, dir))
+        #             for file in glob.glob("*.json"):
+        #                 result.append(os.path.join(root, dir, file))
+        #             if len(result) > 0:
+        #                 break
+        #     if len(result) > 0:
+        #         break
+
+        if not result:
+            for path in sys.path:
+                for root, dirs, files in os.walk(path, topdown=False):
+                    for dir in dirs:
+                        if dir == "configenv":
+                            os.chdir(os.path.join(root, dir))
+                            for file in glob.glob("*.json"):
+                                result.append(os.path.join(root, dir, file))
+                            if len(result) > 0:
+                                break
                     if len(result) > 0:
                         break
-            if len(result) > 0:
-                break
+                if len(result) > 0:
+                    break
         return result     
 
     def __run(self):
