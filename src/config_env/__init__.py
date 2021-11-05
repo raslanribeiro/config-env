@@ -40,7 +40,7 @@ class ConfigEnv:
         for root, dirs, files in os.walk(os.getcwd(), topdown=False):
             for dir in dirs:
                 if dir == "configenv":
-                    os.chdir(dir)
+                    os.chdir(os.path.join(root, dir))
                     for file in glob.glob("*.json"):
                         result.append(os.path.join(root, dir, file))
                     if len(result) > 0:
