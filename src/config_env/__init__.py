@@ -2,7 +2,7 @@ import os
 import glob
 import collections.abc
 import sys
-
+sys.path.append(os.getcwd())
 
 class ConfigEnv:
     def __init__(self) -> None:
@@ -38,17 +38,19 @@ class ConfigEnv:
            
     def __get_path_files(self):
         result = []
-        # It could be a problem once it can get configenv path from differents projects.
-        # for root, dirs, files in os.walk(os.getcwd(), topdown=False):
-        #     for dir in dirs:
-        #         if dir == "configenv":
-        #             os.chdir(os.path.join(root, dir))
-        #             for file in glob.glob("*.json"):
-        #                 result.append(os.path.join(root, dir, file))
-        #             if len(result) > 0:
-        #                 break
-        #     if len(result) > 0:
-        #         break
+        for path in sys.path:
+            for root, dirs, files in os.walk(path, topdown=True):
+                for dir in dirs:
+                    if dir == "configenv":
+                        os.chdir(os.path.join(root, dir))
+                        for file in glob.glob("*.json"):
+                            result.append(os.path.join(root, dir, file))
+                        if len(result) > 0:
+                            break
+                if len(result) > 0:
+                    break
+            if len(result) > 0:
+                break
 
         if not result:
             for path in sys.path:
@@ -88,7 +90,7 @@ class ConfigEnv:
                 env_name = self.python_env.lower() + "_config"
                 self.config = self.__update_dictionary(self.config, eval(env_name))
             else:
-                raise ValueError("Missing config file"+ self.python_env.lower()+ ".json")
+                raise FileNotFoundError("Missing config file"+ self.python_env.lower()+ ".json")
 
         if "custom_environment_variables.json" in files:
             custom_config = self.__evaluate_environment_variables(
