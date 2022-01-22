@@ -98,6 +98,7 @@ class ConfigEnv:
             )
             custom_config_cleaned = self.__cleanNullTerms(custom_config)
             self.config = self.__update_dictionary(self.config, custom_config_cleaned)
+        os.chdir("..")
         return self.config
     
     def get(self, values):
