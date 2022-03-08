@@ -2,6 +2,7 @@ import os
 import glob
 import collections.abc
 import sys
+import logging
 sys.path.append(os.getcwd())
 
 class ConfigEnv:
@@ -70,6 +71,7 @@ class ConfigEnv:
 
     def __run(self):
         files_path = self.__get_path_files()
+        logging.info(f"CONFIG_ENV - FILES PATH: {files_path}")
         files = [i.split('/')[-1] for i in files_path]
         self.config = {}
         filenames = []
